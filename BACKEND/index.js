@@ -14,7 +14,7 @@ const db = mysql.createConnection({
     port: 3306,
     database: "todolist",
 });
-
+db.connect();
 // Keep your root endpoint
 app.get("/", (req,res) => {
     const q = "SELECT * FROM tasks";
@@ -36,12 +36,17 @@ app.get("/tasks", (req,res) => {
 app.post("/tasks", (req, res) => {
     console.log(req.body.taskName);
     const value=req.body.taskName;
-    const q= "INSERT INTO tasks (taskName) VALUES (?)";
+    const q= "INSERT INTO tasks (task) VALUES (?)";
 
     db.query(q,[value], (err, result) => {
-        if (err) return res.json(err);
+        if (err){
+          console.log("ERROR FL BACKEND :",err)
+          return res.json(err);
+        }
+        console.log("koulchi howa hdak");
         return res.json(result);
     });
+
 });
 
 app.put('/tasks/:id', (req, res) => {

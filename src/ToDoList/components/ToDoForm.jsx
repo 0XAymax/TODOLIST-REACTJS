@@ -1,9 +1,9 @@
 import {useState} from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
-export default  function ToDoForm(){
+export default  function ToDoForm({addTask}){
     const [value, setValue] = useState("");
-
     const handleInput =(e)=>{
         setValue(e.target.value);
         console.log(value);
@@ -16,8 +16,9 @@ export default  function ToDoForm(){
             await axios.post("http://localhost:8080/tasks", taskData);
             console.log(taskData);
         } catch(e) {
-            console.log("Error occured :", e);
+            console.log("Error HNA F HANDLE SUBMIT :", e);
         }
+
         setValue("");
     }
     return (<>
