@@ -1,15 +1,23 @@
 import {useState} from "react";
+import axios from "axios";
 
-export default  function ToDoForm({addTodo}){
+export default  function ToDoForm(){
     const [value, setValue] = useState("");
 
     const handleInput =(e)=>{
         setValue(e.target.value);
+        console.log(value);
     }
 
-    const handleSubmit =(e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        addTodo(value);
+        const taskData = { taskName: value }; // Changed from { value } to { taskName: value }
+        try {
+            await axios.post("http://localhost:8080/tasks", taskData);
+            console.log(taskData);
+        } catch(e) {
+            console.log("Error occured :", e);
+        }
         setValue("");
     }
     return (<>

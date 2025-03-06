@@ -1,8 +1,10 @@
 import ToDoForm from "./ToDoForm";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {v4 as uuidv4 } from 'uuid';
 import ToDo from "./ToDo";
 import EditToDoForm from "./EditToDoForm";
+import axios from "axios";
+
 
 uuidv4();
 export default  function ToDoWrapper(){
@@ -14,15 +16,15 @@ export default  function ToDoWrapper(){
     }
 
     const toggleComplete=(id) =>{
-         setTodos(todos.map(todo => todo.id == id ? {...todo,completed : !todo.completed} : todo))
+         setTodos(todos.map(todo => todo.id === id ? {...todo,completed : !todo.completed} : todo))
     }
 
     const deleteToDo=(id)=>{
-        setTodos(todos.filter(todo => todo.id!=id ))
+        setTodos(todos.filter(todo => todo.id!==id ))
     }
 
     const updateToDo=(id)=>{
-        setTodos(todos.map(todo => todo.id == id ? {...todo,isEditting :!todo.isEditting} : todo))
+        setTodos(todos.map(todo => todo.id === id ? {...todo,isEditting :!todo.isEditting} : todo))
     }
     const editTask = (task, id) => {
         setTodos(
@@ -32,13 +34,28 @@ export default  function ToDoWrapper(){
         );
     };
 
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const res= await axios("http://localhost:8080/");
+                setTodos(res.data);
+            }catch(e){
+                console.log("Error : ",e)
+            }
+        }
+        fetchTasks();
+    }, []);
+
+    const displayProducts = () => {
+        return todos.map((todo,key) => <ToDo TASK={todo} key={key}/>)
+
+    };
+
+
     return (<div className="TodoWrapper">
         <h1>Get Things Done !</h1>
         <ToDoForm addTodo={addTodo}/>
-        {todos.map((todo,key) => (
-            todo.isEditting ? (<EditToDoForm TASK={todo} updateToDo={editTask}/>) :(
-              <ToDo TASK={todo} key={key} toggleComplete={toggleComplete} deleteToDo={deleteToDo} updateToDo={updateToDo}/>)
-        ))}
+            {displayProducts()}
       </div>
     )
 }

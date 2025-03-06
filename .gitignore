@@ -30,4 +30,5 @@ yarn-error.log*
 /src/Router/
 /src/store/
 /src/WeatherApp/
+/BACKEND/node_modules/
 
